@@ -6,6 +6,7 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
     json_response = JSON.parse(response.body)
 
     assert_equal 200, response.status
+    binding.pry
     assert_equal nil, body['message']
     assert_equal 'E-99999999', json_response['emergency']['code']
     assert_equal 1, json_response['emergency']['fire_severity']
