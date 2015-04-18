@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150418022035) do
+ActiveRecord::Schema.define(version: 20150418063745) do
 
   create_table "emergencies", force: :cascade do |t|
-    t.string  "code"
-    t.integer "fire_severity"
-    t.integer "police_severity"
-    t.integer "medical_severity"
+    t.string   "code"
+    t.integer  "fire_severity"
+    t.integer  "police_severity"
+    t.integer  "medical_severity"
+    t.datetime "resolved_at"
   end
 
   create_table "responders", force: :cascade do |t|
