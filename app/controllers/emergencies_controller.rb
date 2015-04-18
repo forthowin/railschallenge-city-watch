@@ -6,7 +6,7 @@ class EmergenciesController < ApplicationController
     if emergency.save
       render json: Hash['emergency', emergency].to_json, status: :created
     else
-      render_json_errors(emergency)
+      render json: emergency.error_message.to_json, status: :unprocessable_entity
     end
   end
 
@@ -27,27 +27,5 @@ class EmergenciesController < ApplicationController
 
   def page_not_found
     render json: Hash['message', 'page not found'].to_json, status: :not_found
-  end
-
-  def render_json_errors(emergency)
-    if emergency.errors.include?(:id)
-      render_id_error
-    elsif emergency.errors.include?(:resolved_at)
-      render_resolved_at_error
-    else
-      render_errors
-    end
-  end
-
-  def render_id_error
-    render json: Hash['message', emergency.errors[:id].first].to_json, status: :unprocessable_entity
-  end
-
-  def render_resolved_at_error
-    render json: Hash['message', emergency.errors[:resolved_at].first].to_json, status: :unprocessable_entity
-  end
-
-  def render_errors
-    render json: Hash['message', emergency.errors].to_json, status: :unprocessable_entity
   end
 end

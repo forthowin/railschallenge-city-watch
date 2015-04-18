@@ -10,6 +10,17 @@ class Emergency < ActiveRecord::Base
                                               if: 'police_severity.is_a?(Numeric)' }
   validates :medical_severity, numericality: { greater_than: 0, message: 'must be greater than or equal to 0',
                                                if: 'medical_severity.is_a?(Numeric)' }
+
   validates_absence_of :id, message: 'found unpermitted parameter: id'
   validates_absence_of :resolved_at, message: 'found unpermitted parameter: resolved_at'
+
+  def error_message
+    if errors.include?(:id)
+      Hash['message', errors[:id].first]
+    elsif errors.include?(:resolved_at)
+      Hash['message', errors[:resolved_at].first]
+    else
+      Hash['message', errors]
+    end
+  end
 end
