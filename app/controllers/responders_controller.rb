@@ -25,7 +25,7 @@ class RespondersController < ApplicationController
 
     if @key == :on_duty
       @responder.update_column(:on_duty, on_duty_value)
-      render 'responders/show.json'
+      render 'responders/update.json'
     else
       @responder.update(responder_params)
       render 'responders/update.json', status: :unprocessable_entity
