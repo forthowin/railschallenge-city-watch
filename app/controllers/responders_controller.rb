@@ -2,7 +2,6 @@ class RespondersController < ApplicationController
   before_action :page_not_found, only: [:new, :edit, :destroy]
 
   def create
-    require 'jbuilder'
     @responder = Responder.new(responder_params)
     if @responder.save
       render 'responders/create.json', status: :created
@@ -33,6 +32,9 @@ class RespondersController < ApplicationController
     end
   end
 
+  def index
+  end
+  
   def new
   end
 
