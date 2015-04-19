@@ -16,7 +16,7 @@ class EmergenciesController < ApplicationController
   end
 
   def show
-    @emergency = Emergency.find_by code: params[:name]
+    @emergency = Emergency.find_by code: params[:code]
     if @emergency
       render 'emergencies/show.json'
     else
@@ -25,7 +25,7 @@ class EmergenciesController < ApplicationController
   end
 
   def update
-    @emergency = Emergency.find_by code: params[:name]
+    @emergency = Emergency.find_by code: params[:code]
     if params[:emergency].include?(:code)
       render json: { message: 'found unpermitted parameter: code' }, status: :unprocessable_entity
     else
