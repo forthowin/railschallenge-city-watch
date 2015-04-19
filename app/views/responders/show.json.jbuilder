@@ -1,0 +1,1 @@
+json.partial! 'responders/success', responder: @responder
