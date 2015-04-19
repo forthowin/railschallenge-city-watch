@@ -1,6 +1,6 @@
 class Emergency < ActiveRecord::Base
-  validates_absence_of :id, message: 'found unpermitted parameter: id'
-  validates_absence_of :resolved_at, message: 'found unpermitted parameter: resolved_at'
+  validates_absence_of :id, message: 'found unpermitted parameter: id', on: :create
+  validates_absence_of :resolved_at, message: 'found unpermitted parameter: resolved_at', on: :create
 
   validates :code, presence: true, uniqueness: { message: 'has already been taken' }
   validates :fire_severity, presence: true, numericality: { only_integer: true, message: 'is not a number' }

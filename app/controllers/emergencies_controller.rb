@@ -25,6 +25,13 @@ class EmergenciesController < ApplicationController
   end
 
   def update
+    @emergency = Emergency.find_by code: params[:name]
+    if params[:emergency].include?(:code)
+      render json: Hash['message', 'found unpermitted parameter: code'].to_json, status: :unprocessable_entity
+    else
+      @emergency.update(emergency_params)
+      render 'emergencies/update.json'
+    end
   end
 
   def new
