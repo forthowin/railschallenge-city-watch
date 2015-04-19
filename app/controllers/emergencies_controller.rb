@@ -2,12 +2,20 @@ class EmergenciesController < ApplicationController
   before_action :page_not_found, only: [:new, :edit, :destroy]
 
   def create
-    emergency = Emergency.new(emergency_params)
-    if emergency.save
-      render json: Hash['emergency', emergency].to_json, status: :created
+    @emergency = Emergency.new(emergency_params)
+    if @emergency.save
+      render 'emergencies/create.json', status: :created
     else
-      render json: emergency.error_message.to_json, status: :unprocessable_entity
+      render 'emergencies/create.json', status: :unprocessable_entity
     end
+  end
+
+  def index
+    @emergencies = Emergency.all
+    render 'emergencies/index.json'
+  end
+
+  def update
   end
 
   def new
@@ -23,9 +31,5 @@ class EmergenciesController < ApplicationController
 
   def emergency_params
     params.require(:emergency).permit(:id, :resolved_at, :code, :fire_severity, :police_severity, :medical_severity)
-  end
-
-  def page_not_found
-    render json: Hash['message', 'page not found'].to_json, status: :not_found
   end
 end
