@@ -1,4 +1,6 @@
 class Responder < ActiveRecord::Base
+  belongs_to :emergency, foreign_key: :emergency_code, primary_key: :code
+
   self.inheritance_column = :_type_disabled
 
   validates :capacity, presence: true, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 5,

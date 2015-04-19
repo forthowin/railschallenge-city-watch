@@ -1,4 +1,6 @@
 class Emergency < ActiveRecord::Base
+  has_many :responders, primary_key: :code, foreign_key: :emergency_code
+
   validates_absence_of :id, message: 'found unpermitted parameter: id', on: :create
   validates_absence_of :resolved_at, message: 'found unpermitted parameter: resolved_at', on: :create
 
