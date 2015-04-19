@@ -33,8 +33,10 @@ class RespondersController < ApplicationController
   end
 
   def index
+    @responders = Responder.all
+    render 'responders/index.json'
   end
-  
+
   def new
   end
 
