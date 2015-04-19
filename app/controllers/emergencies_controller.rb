@@ -15,6 +15,15 @@ class EmergenciesController < ApplicationController
     render 'emergencies/index.json'
   end
 
+  def show
+    @emergency = Emergency.find_by code: params[:name]
+    if @emergency
+      render 'emergencies/show.json'
+    else
+      render json: nil, status: :not_found
+    end
+  end
+
   def update
   end
 
