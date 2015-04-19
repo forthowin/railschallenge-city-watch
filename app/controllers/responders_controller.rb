@@ -57,7 +57,7 @@ class RespondersController < ApplicationController
   end
 
   def to_bool(str)
-    str == 'true'
+    str == 'true' or str == true
   end
 
   def responder_params
