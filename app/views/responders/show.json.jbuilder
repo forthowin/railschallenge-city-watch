@@ -1,1 +1,1 @@
-json.partial! 'responders/success', responder: @responder
+json.partial! 'responders/responder', responder: @responder

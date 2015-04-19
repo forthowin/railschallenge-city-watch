@@ -5,5 +5,5 @@ if @responder.errors.any?
     json.message @responder.errors
   end
 else
-  json.partial! 'responders/success', responder: @responder
+  json.partial! 'responders/responder', responder: @responder
 end
