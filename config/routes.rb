@@ -5,6 +5,6 @@ Rails.application.routes.draw do
   get '/responders/:name', to: 'responders#show'
   patch '/responders/:name', to: 'responders#update'
 
-  get '/emergencies/:name', to: 'emergencies#show'
-  patch '/emergencies/:name', to: 'emergencies#update'
+  get '/emergencies/:code', to: 'emergencies#show'
+  patch '/emergencies/:code', to: 'emergencies#update'
 end
