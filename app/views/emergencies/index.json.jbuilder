@@ -4,3 +4,7 @@ json.emergencies @emergencies do |emergency|
   json.police_severity emergency.police_severity
   json.medical_severity emergency.medical_severity
 end
+
+json.full_responses do
+  json.array! [1, @emergencies.count]
+end
