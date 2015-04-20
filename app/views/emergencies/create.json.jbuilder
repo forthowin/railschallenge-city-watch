@@ -6,4 +6,8 @@ if @emergency.errors.any?
   end
 else
   json.partial! 'emergencies/emergency', emergency: @emergency
+  json.emergency do
+    json.responders @emergency.responders.map(&:name)
+    json.full_response @emergency.full_response
+  end
 end

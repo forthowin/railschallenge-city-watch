@@ -4,6 +4,7 @@ class EmergenciesController < ApplicationController
   def create
     @emergency = Emergency.new(emergency_params)
     if @emergency.save
+      @emergency.dispatch
       render 'emergencies/create.json', status: :created
     else
       render 'emergencies/create.json', status: :unprocessable_entity
