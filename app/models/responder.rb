@@ -16,18 +16,18 @@ class Responder < ActiveRecord::Base
   validates_absence_of :id, message: 'found unpermitted parameter: id'
 
   def self.total_capacity(type)
-    where('type = ?', "#{type}").map(&:capacity).inject(0, :+)
+    where('type = ?', "#{type}").sum('capacity')
   end
 
   def self.available_responders(type)
-    where('type = ? AND emergency_code IS NULL', "#{type}").map(&:capacity).inject(0, :+)
+    where('type = ? AND emergency_code IS NULL', "#{type}").sum('capacity')
   end
 
   def self.on_duty_responders(type)
-    where('type = ? AND on_duty = ?', "#{type}", true).map(&:capacity).inject(0, :+)
+    where('type = ? AND on_duty = ?', "#{type}", true).sum('capacity')
   end
 
   def self.ready_to_go_responders(type)
-    where('type = ? AND on_duty = ? AND emergency_code IS NULL', "#{type}", true).map(&:capacity).inject(0, :+)
+    where('type = ? AND on_duty = ? AND emergency_code IS NULL', "#{type}", true).sum('capacity')
   end
 end
