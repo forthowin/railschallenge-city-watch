@@ -31,6 +31,11 @@ class EmergenciesController < ApplicationController
       render json: { message: 'found unpermitted parameter: code' }, status: :unprocessable_entity
     else
       @emergency.update(emergency_params)
+      if params[:emergency].include?(:resolved_at)
+        @emergency.responders.each do |responder|
+          responder.update_column(:emergency_code, nil)
+        end
+      end
       render 'emergencies/update.json'
     end
   end
