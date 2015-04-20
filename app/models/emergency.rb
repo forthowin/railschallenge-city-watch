@@ -34,6 +34,7 @@ class Emergency < ActiveRecord::Base
   def group_dispatch(type, severity)
     return unless severity > 0
     on_duty_responders = Responder.where('type = ? AND on_duty = ?', "#{type}", true)
+    return if on_duty_responders.empty?
     dispatcher_options = dispatch_subset(on_duty_responders, severity)
 
     dispatcher_options.last.each do |dispatcher|
