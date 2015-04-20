@@ -34,11 +34,23 @@ class RespondersController < ApplicationController
 
   def index
     @responders = Responder.all
-    total_fire_capacity = @responders.where('type = ?', 'Fire').map(&:capacity).inject(:+)
-    total_police_capacity = @responders.where('type = ?', 'Police').map(&:capacity).inject(:+)
-    total_medical_capacity = @responders.where('type = ?', 'Medical').map(&:capacity).inject(:+)
-    binding.pry
-    render 'responders/index.json'
+    if params[:show]
+      @total_fire_capacity = @responders.where('type = ?', 'Fire').map(&:capacity).inject(0, :+)
+      @total_police_capacity = @responders.where('type = ?', 'Police').map(&:capacity).inject(0, :+)
+      @total_medical_capacity = @responders.where('type = ?', 'Medical').map(&:capacity).inject(0, :+)
+      @available_fire_responder = @responders.where('type = ? AND emergency_code IS NULL', 'Fire').map(&:capacity).inject(0, :+)
+      @available_police_responder = @responders.where('type = ? AND emergency_code IS NULL', 'Police').map(&:capacity).inject(0, :+)
+      @available_medical_responder = @responders.where('type = ? AND emergency_code IS NULL', 'Medical').map(&:capacity).inject(0, :+)
+      @on_duty_fire_responder = @responders.where('type = ? AND on_duty = ?', 'Fire', true).map(&:capacity).inject(0, :+)
+      @on_duty_police_responder = @responders.where('type = ? AND on_duty = ?', 'Police', true).map(&:capacity).inject(0, :+)
+      @on_duty_medical_responder = @responders.where('type = ? AND on_duty = ?', 'Medical', true).map(&:capacity).inject(0, :+)
+      @fire_responder = @responders.where('type = ? AND on_duty = ? AND emergency_code IS NULL', 'Fire', true).map(&:capacity).inject(0, :+)
+      @police_responder = @responders.where('type = ? AND on_duty = ? AND emergency_code IS NULL', 'Police', true).map(&:capacity).inject(0, :+)
+      @medical_responder = @responders.where('type = ? AND on_duty = ? AND emergency_code IS NULL', 'Medical', true).map(&:capacity).inject(0, :+)
+      render 'responders/capacity.json'
+    else
+      render 'responders/index.json'
+    end
   end
 
   def new
