@@ -6,5 +6,5 @@ json.emergencies @emergencies do |emergency|
 end
 
 json.full_responses do
-  json.array! [1, @emergencies.count]
+  json.array! [Emergency.where('full_response = ?', true).count, @emergencies.count]
 end
