@@ -19,14 +19,19 @@ ActiveRecord::Schema.define(version: 20150418022035) do
     t.integer  "police_severity"
     t.integer  "medical_severity"
     t.datetime "resolved_at"
+    t.boolean  "full_response",    default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "responders", force: :cascade do |t|
-    t.string  "type"
-    t.string  "name"
-    t.string  "emergency_code"
-    t.integer "capacity"
-    t.boolean "on_duty",        default: false
+    t.string   "type"
+    t.string   "name"
+    t.string   "emergency_code"
+    t.integer  "capacity"
+    t.boolean  "on_duty",        default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
