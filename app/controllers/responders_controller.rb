@@ -34,6 +34,10 @@ class RespondersController < ApplicationController
 
   def index
     @responders = Responder.all
+    total_fire_capacity = @responders.where('type = ?', 'Fire').map(&:capacity).inject(:+)
+    total_police_capacity = @responders.where('type = ?', 'Police').map(&:capacity).inject(:+)
+    total_medical_capacity = @responders.where('type = ?', 'Medical').map(&:capacity).inject(:+)
+    binding.pry
     render 'responders/index.json'
   end
 
