@@ -14,4 +14,20 @@ class Responder < ActiveRecord::Base
   validates_absence_of :emergency_code, message: 'found unpermitted parameter: emergency_code'
   validates_absence_of :on_duty, message: 'found unpermitted parameter: on_duty'
   validates_absence_of :id, message: 'found unpermitted parameter: id'
+
+  def self.total_capacity(type)
+    where('type = ?', "#{type}").map(&:capacity).inject(0, :+)
+  end
+
+  def self.available_responders(type)
+    where('type = ? AND emergency_code IS NULL', "#{type}").map(&:capacity).inject(0, :+)
+  end
+
+  def self.on_duty_responders(type)
+    where('type = ? AND on_duty = ?', "#{type}", true).map(&:capacity).inject(0, :+)
+  end
+
+  def self.ready_to_go_responders(type)
+    where('type = ? AND on_duty = ? AND emergency_code IS NULL', "#{type}", true).map(&:capacity).inject(0, :+)
+  end
 end

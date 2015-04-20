@@ -1,5 +1,6 @@
 class EmergenciesController < ApplicationController
   before_action :page_not_found, only: [:new, :edit, :destroy]
+  before_action :set_emergency, only: [:show, :update]
 
   def create
     @emergency = Emergency.new(emergency_params)
@@ -17,7 +18,6 @@ class EmergenciesController < ApplicationController
   end
 
   def show
-    @emergency = Emergency.find_by code: params[:code]
     if @emergency
       render 'emergencies/show.json'
     else
@@ -26,15 +26,12 @@ class EmergenciesController < ApplicationController
   end
 
   def update
-    @emergency = Emergency.find_by code: params[:code]
     if params[:emergency].include?(:code)
       render json: { message: 'found unpermitted parameter: code' }, status: :unprocessable_entity
     else
       @emergency.update(emergency_params)
       if params[:emergency].include?(:resolved_at)
-        @emergency.responders.each do |responder|
-          responder.update_column(:emergency_code, nil)
-        end
+        clear_responders_emergency_code(@emergency)
       end
       render 'emergencies/update.json'
     end
@@ -50,6 +47,16 @@ class EmergenciesController < ApplicationController
   end
 
   private
+
+  def set_emergency
+    @emergency = Emergency.find_by code: params[:code]
+  end
+
+  def clear_responders_emergency_code(emergency)
+    emergency.responders.each do |responder|
+      responder.update_column(:emergency_code, nil)
+    end
+  end
 
   def emergency_params
     params.require(:emergency).permit(:id, :resolved_at, :code, :fire_severity, :police_severity, :medical_severity)

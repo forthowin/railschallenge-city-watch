@@ -34,9 +34,8 @@ class Emergency < ActiveRecord::Base
   def group_dispatch(type, severity)
     return unless severity > 0
     on_duty_responders = Responder.where('type = ? AND on_duty = ?', "#{type}", true)
-
     return if on_duty_responders.empty?
-    dispatcher_options = dispatch_subset(on_duty_responders, severity)
+    dispatcher_options = allocate_responders(on_duty_responders, severity)
 
     dispatcher_options.last.each do |dispatcher|
       dispatcher.update_column(:emergency_code, code)
@@ -52,7 +51,7 @@ class Emergency < ActiveRecord::Base
     update_column(:full_response, true) if total_capacity == total_severity || total_dispatchers.compact.empty?
   end
 
-  def dispatch_subset(objs, target)
+  def allocate_responders(objs, target)
     previous_objs = []
 
     objs.each do |obj|
@@ -61,7 +60,7 @@ class Emergency < ActiveRecord::Base
 
       previous_objs.each do |previous_obj|
         current_obj = previous_obj + [obj]
-        new_objs << current_obj if current_obj.map(&:capacity).inject(0) { |a, e| a + e } <= target
+        new_objs << current_obj if current_obj.map(&:capacity).inject(0, :+) <= target
       end
 
       previous_objs += new_objs
