@@ -19,9 +19,21 @@ class Emergency < ActiveRecord::Base
                                                message: 'must be greater than or equal to 0',
                                                if: 'medical_severity.is_a?(Numeric)' }
 
-  def group_dispatch(type, severity)
-    on_duty_responders = Responder.where('type = ? AND on_duty = ?', "#{type}", true)
+  def dispatch
+    total_dispatchers = []
 
+    total_dispatchers << group_dispatch('Fire', fire_severity)
+    total_dispatchers << group_dispatch('Police', police_severity)
+    total_dispatchers << group_dispatch('Medical', medical_severity)
+
+    update_full_response(total_dispatchers)
+  end
+
+  private
+
+  def group_dispatch(type, severity)
+    return unless severity > 0
+    on_duty_responders = Responder.where('type = ? AND on_duty = ?', "#{type}", true)
     dispatcher_options = dispatch_subset(on_duty_responders, severity)
 
     dispatcher_options.last.each do |dispatcher|
@@ -31,36 +43,28 @@ class Emergency < ActiveRecord::Base
     dispatcher_options.last
   end
 
-  def dispatch
-    total_dispatchers = []
-    if fire_severity > 0
-      total_dispatchers << group_dispatch('Fire', fire_severity)
-    end
+  def update_full_response(total_dispatchers)
+    total_capacity = total_dispatchers.flatten.compact.map(&:capacity).inject(:+)
+    total_severity = fire_severity + police_severity + medical_severity
 
-    if police_severity > 0
-      total_dispatchers << group_dispatch('Police', police_severity)
-    end
-
-    if medical_severity > 0
-      total_dispatchers << group_dispatch('Medical', medical_severity)
-    end
-
-    if total_dispatchers.flatten.map(&:capacity).inject(:+) == fire_severity + police_severity + medical_severity or total_dispatchers.empty?
-      update_column(:full_response, true)
-    end
+    update_column(:full_response, true) if total_capacity == total_severity || total_dispatchers.compact.empty?
   end
 
-  def dispatch_subset(objs, reference_value)
+  def dispatch_subset(objs, target)
     previous_objs = []
+
     objs.each do |obj|
       new_objs = []
-      new_objs << [obj] if obj.capacity <= reference_value
+      new_objs << [obj] if obj.capacity <= target
+
       previous_objs.each do |previous_obj|
-        current_obj = previous_obj + [ obj ]
-        new_objs << current_obj if current_obj.map(&:capacity).inject(0){|accumulator,value|accumulator+value} <= reference_value
+        current_obj = previous_obj + [obj]
+        new_objs << current_obj if current_obj.map(&:capacity).inject(0) { |a, e| a + e } <= target
       end
-      previous_objs = previous_objs + new_objs
+
+      previous_objs += new_objs
     end
+
     previous_objs
   end
 end
