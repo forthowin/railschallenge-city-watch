@@ -29,6 +29,12 @@ class Emergency < ActiveRecord::Base
     update_full_response(total_dispatchers)
   end
 
+  def clear_responders_emergency_code
+    responders.each do |responder|
+      responder.update_column(:emergency_code, nil)
+    end
+  end
+
   private
 
   def group_dispatch(type, severity)

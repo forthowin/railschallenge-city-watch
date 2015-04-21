@@ -31,7 +31,7 @@ class EmergenciesController < ApplicationController
     else
       @emergency.update(emergency_params)
       if params[:emergency].include?(:resolved_at)
-        clear_responders_emergency_code
+        @emergency.clear_responders_emergency_code
       end
       render 'emergencies/update.json'
     end
@@ -50,12 +50,6 @@ class EmergenciesController < ApplicationController
 
   def set_emergency
     @emergency = Emergency.find_by code: params[:code]
-  end
-
-  def clear_responders_emergency_code
-    @emergency.responders.each do |responder|
-      responder.update_column(:emergency_code, nil)
-    end
   end
 
   def emergency_params
