@@ -5,7 +5,7 @@ class Responder < ActiveRecord::Base
 
   validates :capacity, presence: true, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 5,
                                                        message: 'is not included in the list' }, on: :create
-  validates :name, presence: true, uniqueness: { message: 'has already been taken' }, on: :create
+  validates :name, presence: true, uniqueness: true, on: :create
   validates :type, presence: true
 
   validates_absence_of :type, message: 'found unpermitted parameter: type', on: :update
