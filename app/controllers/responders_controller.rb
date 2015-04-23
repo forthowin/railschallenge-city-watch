@@ -3,12 +3,14 @@ class RespondersController < ApplicationController
   before_action :set_responder, only: [:show, :update]
 
   def create
-    @responder = Responder.new(responder_params)
+    @responder = Responder.new(responder_create_params)
     if @responder.save
       render 'responders/create.json', status: :created
     else
       render 'responders/create.json', status: :unprocessable_entity
     end
+    rescue ActionController::UnpermittedParameters => e
+      render json: { message: e.message }, status: :unprocessable_entity
   end
 
   def show
@@ -20,15 +22,10 @@ class RespondersController < ApplicationController
   end
 
   def update
-    @key = set_key
-
-    if @key == :on_duty
-      @responder.update_column(:on_duty, on_duty_value)
-      render 'responders/update.json'
-    else
-      @responder.update(responder_params)
-      render 'responders/update.json', status: :unprocessable_entity
-    end
+    @responder.update(responder_update_params)
+    render 'responders/update.json'
+    rescue ActionController::UnpermittedParameters => e
+      render json: { message: e.message }, status: :unprocessable_entity
   end
 
   def index
@@ -55,8 +52,8 @@ class RespondersController < ApplicationController
     @responder = Responder.find_by name: params[:name]
   end
 
-  def set_key
-    params[:responder].first[0].to_sym
+  def responder_update_params
+    params.require(:responder).permit(:on_duty)
   end
 
   def on_duty_value
@@ -67,7 +64,7 @@ class RespondersController < ApplicationController
     str == 'true' || str == true
   end
 
-  def responder_params
-    params.require(:responder).permit(:id, :type, :name, :capacity, :emergency_code, :on_duty)
+  def responder_create_params
+    params.require(:responder).permit(:type, :name, :capacity)
   end
 end
