@@ -6,9 +6,9 @@ class EmergenciesController < ApplicationController
     @emergency = Emergency.new(emergency_create_params)
     if @emergency.save
       @emergency.dispatch
-      render 'emergencies/create.json', status: :created
+      render 'emergencies/create', status: :created
     else
-      render 'emergencies/create.json', status: :unprocessable_entity
+      render 'emergencies/create', status: :unprocessable_entity
     end
     rescue ActionController::UnpermittedParameters => e
       render json: { message: e.message }, status: :unprocessable_entity
@@ -16,12 +16,12 @@ class EmergenciesController < ApplicationController
 
   def index
     @emergencies = Emergency.all
-    render 'emergencies/index.json'
+    render 'emergencies/index'
   end
 
   def show
     if @emergency
-      render 'emergencies/show.json'
+      render 'emergencies/show'
     else
       render json: nil, status: :not_found
     end
@@ -30,7 +30,7 @@ class EmergenciesController < ApplicationController
   def update
     @emergency.update(emergency_update_params)
     @emergency.clear_responders_emergency_code if params[:emergency].include?(:resolved_at)
-    render 'emergencies/update.json'
+    render 'emergencies/update'
     rescue ActionController::UnpermittedParameters => e
       render json: { message: e.message }, status: :unprocessable_entity
   end
@@ -51,7 +51,7 @@ class EmergenciesController < ApplicationController
   end
 
   def set_emergency
-    @emergency = Emergency.find_by code: params[:code]
+    @emergency = Emergency.find_by code: params[:id]
   end
 
   def emergency_create_params

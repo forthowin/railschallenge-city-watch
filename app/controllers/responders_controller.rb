@@ -5,9 +5,9 @@ class RespondersController < ApplicationController
   def create
     @responder = Responder.new(responder_create_params)
     if @responder.save
-      render 'responders/create.json', status: :created
+      render 'responders/create', status: :created
     else
-      render 'responders/create.json', status: :unprocessable_entity
+      render 'responders/create', status: :unprocessable_entity
     end
     rescue ActionController::UnpermittedParameters => e
       render json: { message: e.message }, status: :unprocessable_entity
@@ -15,7 +15,7 @@ class RespondersController < ApplicationController
 
   def show
     if @responder
-      render 'responders/show.json'
+      render 'responders/show'
     else
       render json: nil, status: :not_found
     end
@@ -23,17 +23,17 @@ class RespondersController < ApplicationController
 
   def update
     @responder.update(responder_update_params)
-    render 'responders/update.json'
+    render 'responders/update'
     rescue ActionController::UnpermittedParameters => e
       render json: { message: e.message }, status: :unprocessable_entity
   end
 
   def index
     if params[:show]
-      render 'responders/capacity.json'
+      render 'responders/capacity'
     else
       @responders = Responder.all
-      render 'responders/index.json'
+      render 'responders/index'
     end
   end
 
@@ -49,7 +49,7 @@ class RespondersController < ApplicationController
   private
 
   def set_responder
-    @responder = Responder.find_by name: params[:name]
+    @responder = Responder.find_by name: params[:id]
   end
 
   def responder_update_params
