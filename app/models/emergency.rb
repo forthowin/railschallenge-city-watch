@@ -1,5 +1,5 @@
 class Emergency < ActiveRecord::Base
-  has_many :responders, primary_key: :code, foreign_key: :emergency_code
+  has_many :responders
 
   validates :code, presence: true, uniqueness: { message: 'has already been taken' }
   validates :fire_severity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -18,7 +18,7 @@ class Emergency < ActiveRecord::Base
 
   def clear_responders_emergency_code
     responders.each do |responder|
-      responder.update_column(:emergency_code, nil)
+      responder.update_columns(emergency_code: nil, emergency_id: nil)
     end
   end
 
@@ -31,7 +31,7 @@ class Emergency < ActiveRecord::Base
     dispatcher_options = allocate_responders(on_duty_responders, severity)
 
     dispatcher_options.last.each do |dispatcher|
-      dispatcher.update_column(:emergency_code, code)
+      dispatcher.update_columns(emergency_code: code, emergency_id: id)
     end
 
     dispatcher_options.last

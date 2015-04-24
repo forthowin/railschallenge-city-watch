@@ -1,5 +1,5 @@
 class Responder < ActiveRecord::Base
-  belongs_to :emergency, foreign_key: :emergency_code, primary_key: :code
+  belongs_to :emergency
 
   self.inheritance_column = :_type_disabled
 

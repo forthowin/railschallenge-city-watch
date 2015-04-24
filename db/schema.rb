@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20150418022035) do
     t.string   "name"
     t.string   "emergency_code"
     t.integer  "capacity"
+    t.integer  "emergency_id"
     t.boolean  "on_duty",        default: false
     t.datetime "created_at"
     t.datetime "updated_at"
