@@ -17,7 +17,6 @@ class RespondersUpdateTest < ActionDispatch::IntegrationTest
 
   test 'PATCH /responders/:name cannot change emergency_code (it can only be set by the system)' do
     patch '/responders/F-100', responder: { emergency_code: 'E-101' }
-
     assert_equal 422, response.status
     assert_equal({ 'message' => 'found unpermitted parameter: emergency_code' }, JSON.parse(body))
   end

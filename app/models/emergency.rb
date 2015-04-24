@@ -5,16 +5,9 @@ class Emergency < ActiveRecord::Base
   validates_absence_of :resolved_at, message: 'found unpermitted parameter: resolved_at', on: :create
 
   validates :code, presence: true, uniqueness: { message: 'has already been taken' }
-  validates :fire_severity, presence: true, numericality: { only_integer: true }
-  validates :police_severity, presence: true, numericality: { only_integer: true }
-  validates :medical_severity, presence: true, numericality: { only_integer: true }
-
-  validates :fire_severity, numericality: { greater_than_or_equal_to: 0,
-                                            if: 'fire_severity.is_a?(Numeric)' }
-  validates :police_severity, numericality: { greater_than_or_equal_to: 0,
-                                              if: 'police_severity.is_a?(Numeric)' }
-  validates :medical_severity, numericality: { greater_than_or_equal_to: 0,
-                                               if: 'medical_severity.is_a?(Numeric)' }
+  validates :fire_severity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :police_severity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :medical_severity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   def dispatch
     total_dispatchers = []
