@@ -1,5 +1,4 @@
 class EmergenciesController < ApplicationController
-  before_action :page_not_found, only: [:new, :edit, :destroy]
   before_action :set_emergency, only: [:show, :update]
 
   def create
@@ -10,8 +9,6 @@ class EmergenciesController < ApplicationController
     else
       render json: { message: @emergency.errors }, status: :unprocessable_entity
     end
-    rescue ActionController::UnpermittedParameters => e
-      render json: { message: e.message }, status: :unprocessable_entity
   end
 
   def index
@@ -29,10 +26,8 @@ class EmergenciesController < ApplicationController
 
   def update
     @emergency.update(emergency_update_params)
-    @emergency.clear_responders_emergency_code if params[:emergency].include?(:resolved_at)
+    @emergency.clear_responders_emergency_code if @emergency.resolved_at.present?
     render :show
-    rescue ActionController::UnpermittedParameters => e
-      render json: { message: e.message }, status: :unprocessable_entity
   end
 
   def new

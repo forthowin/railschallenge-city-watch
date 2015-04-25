@@ -1,5 +1,4 @@
 class RespondersController < ApplicationController
-  before_action :page_not_found, only: [:new, :edit, :destroy]
   before_action :set_responder, only: [:show, :update]
 
   def create
@@ -9,8 +8,6 @@ class RespondersController < ApplicationController
     else
       render json: { message: @responder.errors }, status: :unprocessable_entity
     end
-    rescue ActionController::UnpermittedParameters => e
-      render json: { message: e.message }, status: :unprocessable_entity
   end
 
   def show
@@ -24,8 +21,6 @@ class RespondersController < ApplicationController
   def update
     @responder.update(responder_update_params)
     render :show
-    rescue ActionController::UnpermittedParameters => e
-      render json: { message: e.message }, status: :unprocessable_entity
   end
 
   def index
@@ -54,14 +49,6 @@ class RespondersController < ApplicationController
 
   def responder_update_params
     params.require(:responder).permit(:on_duty)
-  end
-
-  def on_duty_value
-    to_bool(params[:responder].fetch(:on_duty))
-  end
-
-  def to_bool(str)
-    str == 'true' || str == true
   end
 
   def responder_create_params
