@@ -3,9 +3,8 @@ class Responder < ActiveRecord::Base
 
   self.inheritance_column = :_type_disabled
 
-  validates :capacity, presence: true, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 5,
-                                                       message: 'is not included in the list' }, on: :create
-  validates :name, presence: true, uniqueness: true, on: :create
+  validates :capacity, presence: true, inclusion: 1..5
+  validates :name, presence: true, uniqueness: true
   validates :type, presence: true
 
   scope :total_capacity,        ->(type) { where('type = ?', type) }
