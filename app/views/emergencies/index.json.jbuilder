@@ -5,6 +5,4 @@ json.emergencies @emergencies do |emergency|
   json.medical_severity emergency.medical_severity
 end
 
-json.full_responses do
-  json.array! [Emergency.where('full_response = ?', true).count, @emergencies.count]
-end
+json.full_responses [Emergency.where('full_response = ?', true).count, Emergency.where('resolved_at IS NOT NULL').count]
