@@ -9,9 +9,9 @@ class Emergency < ActiveRecord::Base
   def dispatch
     total_dispatchers = []
 
-    total_dispatchers << group_dispatch('Fire', fire_severity)
-    total_dispatchers << group_dispatch('Police', police_severity)
-    total_dispatchers << group_dispatch('Medical', medical_severity)
+    total_dispatchers << assign_responders('Fire', fire_severity)
+    total_dispatchers << assign_responders('Police', police_severity)
+    total_dispatchers << assign_responders('Medical', medical_severity)
 
     update_full_response(total_dispatchers)
   end
@@ -24,7 +24,7 @@ class Emergency < ActiveRecord::Base
 
   private
 
-  def group_dispatch(type, severity)
+  def assign_responders(type, severity)
     return unless severity > 0
     on_duty_responders = Responder.where('type = ? AND on_duty = ?', "#{type}", true)
     return if on_duty_responders.empty?

@@ -1,4 +1,5 @@
 class EmergenciesController < ApplicationController
+  before_action :page_not_found, only: [:new, :edit, :destroy]
   before_action :set_emergency, only: [:show, :update]
 
   def create
@@ -13,15 +14,10 @@ class EmergenciesController < ApplicationController
 
   def index
     @emergencies = Emergency.all
-    render :index
   end
 
   def show
-    if @emergency
-      render json: { emergency: @emergency }
-    else
-      render json: nil, status: :not_found
-    end
+    render json: nil, status: :not_found unless @emergency
   end
 
   def update

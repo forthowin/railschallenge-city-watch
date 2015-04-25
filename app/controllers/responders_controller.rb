@@ -1,4 +1,5 @@
 class RespondersController < ApplicationController
+  before_action :page_not_found, only: [:new, :edit, :destroy]
   before_action :set_responder, only: [:show, :update]
 
   def create
@@ -11,11 +12,7 @@ class RespondersController < ApplicationController
   end
 
   def show
-    if @responder
-      render :show
-    else
-      render json: nil, status: :not_found
-    end
+    render json: nil, status: :not_found unless @responder
   end
 
   def update
@@ -24,12 +21,8 @@ class RespondersController < ApplicationController
   end
 
   def index
-    if params[:show]
-      render :capacity
-    else
-      @responders = Responder.all
-      render :index
-    end
+    render :capacity if params[:show]
+    @responders = Responder.all
   end
 
   def new
