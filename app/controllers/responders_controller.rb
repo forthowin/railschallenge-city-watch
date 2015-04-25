@@ -1,4 +1,5 @@
 class RespondersController < ApplicationController
+  before_action :page_not_found, only: [:new, :edit, :destroy]
   before_action :set_responder, only: [:show, :update]
 
   def create
@@ -34,6 +35,15 @@ class RespondersController < ApplicationController
       @responders = Responder.all
       render :index
     end
+  end
+
+  def new
+  end
+
+  def edit
+  end
+
+  def destroy
   end
 
   private

@@ -1,4 +1,5 @@
 class EmergenciesController < ApplicationController
+  before_action :page_not_found, only: [:new, :edit, :destroy]
   before_action :set_emergency, only: [:show, :update]
 
   def create
@@ -32,6 +33,15 @@ class EmergenciesController < ApplicationController
     render :show
     rescue ActionController::UnpermittedParameters => e
       render json: { message: e.message }, status: :unprocessable_entity
+  end
+
+  def new
+  end
+
+  def edit
+  end
+
+  def destroy
   end
 
   private
