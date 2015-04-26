@@ -1,5 +1,4 @@
 class EmergenciesController < ApplicationController
-  before_action :page_not_found, only: [:new, :edit, :destroy]
   before_action :set_emergency, only: [:show, :update]
 
   def create
@@ -24,15 +23,6 @@ class EmergenciesController < ApplicationController
     @emergency.update(emergency_update_params)
     @emergency.clear_responders_emergency_code if @emergency.resolved_at.present?
     render :show
-  end
-
-  def new
-  end
-
-  def edit
-  end
-
-  def destroy
   end
 
   private

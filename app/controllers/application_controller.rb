@@ -1,7 +1,10 @@
 class ApplicationController < ActionController::Base
   rescue_from ActionController::UnpermittedParameters, with: :unpermitted_param_errors
 
-  def page_not_found
+  private
+
+  def action_missing(m)
+    Rails.logger.error(m)
     render json: { message: 'page not found' }, status: :not_found
   end
 
